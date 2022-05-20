@@ -1,46 +1,68 @@
-#Donwload_CVM
+#Download_CVM
 
-
-
-#Anos[1] = format(mondate(Data_base, "%Y"))
-#Meses[1] = format(mondate(Data_base, "%m"))
-
-Download_CVM1 = function(Meses_calculados){
-
-for (i in 1:(Meses_calculados-1)) {
+suffix_cvm = function(Meses_calculados,Data_base)
+  {
+  Anos=0
+  Meses=0
+  #Starting dates
+  Meses[1] = format(mondate(Data_base, "%m"))
+  Anos[1] = format(mondate(Data_base, "%Y"))
   
-  Anos[i+1] = format(mondate(Data_base- months(i), "%Y"))
-  Meses[i+1] = format(mondate(Data_base- months(i), "%m"))
-}
-}
+  #Creating suffix to be used in cvm link
+  suffix = rep(0, Meses_calculados)
+  suffix[1] = paste0(Anos[1], Meses[1])
 
-
-Download_CVM2 = function(Meses_calculados){
-
-
-  for (i in 1:Meses_calculados) {
-    myurl[[i]] = paste(cvm_link,Anos[i],Meses[i],".csv", sep="")
+  for (i in 1:(Meses_calculados-1))
+    {
+    Meses[i+1] = format(mondate(Data_base- months(i), "%m"))
+    Anos[i+1] = format(mondate(Data_base- months(i), "%Y"))
+    suffix[i+1] = paste0(Anos[i+1], Meses[i+1])
+    }
+  
+  return(suffix)
   }
 
-}
-myurl  
-#X_CVM =
-#X_CVM[i] <- read_delim(url[i], delim = ";", escape_double = FALSE, col_types = cols(DT_COMPTC = col_character()), trim_ws = TRUE)
 
-#Lista= list()
-#Alternativamente pode ser usado o link abaixo
-#read.csv("Z:/GERENCIA/INVESTIMENTOS/MARKOWITZ/202202-CVM.csv", sep=";", dec=",")
-
-
-Download_CVM3 = function(){
-for (i in 1:13) {
+Download_CVM = function(n, suffix)
+  {
   
+  #Temporary file to be created
+  tmp = 'tmp.zip'
+  
+  lista = list()
+  myurl = paste0(cvm_link, suffix,".zip")
+  mydta = paste0(cvm_link2, suffix,".csv")
+  
+  for (i in 1:n)
+    {
+    download.file(url = myurl[i], destfile = tmp)
+    unzip(tmp)
+    
+    # lista[[i]] = read_delim(mydta[i],
+    #                         delim = ";",
+    #                         escape_double = FALSE,
+    #                         col_types = cols(DT_COMPTC = col_character()),
+    #                         trim_ws = TRUE)
+    }
+    
+  
+    lista = do.call(rbind, lapply(list.files(path = ".", pattern = "csv"),
+                                  read.csv2))
+    
+    return(lista)
+  }
 
 
-Lista[[i]] = list (read_delim(myurl[[i]], delim = ";", escape_double = FALSE, col_types = cols(DT_COMPTC = col_character()), trim_ws = TRUE)
+Read_CVM = function(n, suffix)
+  {
+  lista = list()
+  mydta = vector()
+  
+  lista = do.call(rbind.data.frame, lapply(list.files(path = ".", pattern = "csv"),
+                                read.csv, sep = ";"))
+  
+  return(lista)
+  }
 
-)
 
-}
 
-}
