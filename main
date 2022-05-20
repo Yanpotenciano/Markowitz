@@ -1,0 +1,21 @@
+# Created by Yan - 2022-04-12
+setwd("Z:/GERENCIA/INVESTIMENTOS/MARKOWITZ-MAIN")
+rm(list=ls(all=TRUE))
+
+# Importing configuration variables
+source("Config.R")
+
+# Importing everything else
+source("download_CVM.R")
+source("Analise_Fundos.R")
+
+# Download dos arquivos do site da cvm 
+suffix = suffix_cvm(Meses_calculados, Data_base)
+#my_dt = Download_CVM(Meses_calculados, suffix)
+my_dt = Read_CVM(Meses_calculados,suffix)
+
+# Step ?
+Fundos = read_funds(fund_register)
+my_dt = Analise_CNPJ(my_dt,Fundos)
+my_dt2= Analise_Markowitz(my_dt,fund_register)
+Markowitz= otimizacao(my_dt,my_dt2)
