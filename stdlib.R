@@ -2,7 +2,7 @@
 library(plotly)
 library(fPortfolio)
 library(BatchGetSymbols)
-# todas as funÃ§Ãµes que subscrevem tidyverse devem vir antes
+# todas as funções que subscrevem tidyverse devem vir antes
 library(tidyverse)
 library(readxl)
 library(lubridate)
